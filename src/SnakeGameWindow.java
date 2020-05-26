@@ -47,13 +47,12 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
         {
             if (e.getSource() == newGameMenuItem)
             {
-                JOptionPane.showConfirmDialog(null,
-                        "Are you sure you want to start a new game?",
-                        "Confirm",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to start a new game?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-                // TODO: Implement...
+                if (dialogResult == JOptionPane.YES_OPTION)
+                {
+                    snakeGame.startNewGame();
+                }
             }
 
             if (e.getSource() == closeMenuItem)

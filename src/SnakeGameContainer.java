@@ -19,7 +19,9 @@ public class SnakeGameContainer extends JPanel
     private final Color BG_COLOUR = new Color(30, 30, 30);
     private final Color FOOD_COLOUR = new Color(255, 44, 88);
     private final Color TEXT_COLOUR = new Color(255, 255, 255);
+    private final Direction INITIAL_SNAKE_DIR = Direction.Right;
     private final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 24);
+    private final boolean WALL_COLLISION = true;
     private final int FOOD_POINTS_WORTH = 15;
     private final int GAME_LOOP_SLEEP_MS = 75;
     private final int SNAKE_DIMENSIONS = 10;
@@ -28,8 +30,8 @@ public class SnakeGameContainer extends JPanel
     private final int CONTAINER_HEIGHT = SNAKE_DIMENSIONS * 50;
     private final int CONTAINER_WIDTH = SNAKE_DIMENSIONS * 75;
 
-    private ArrayList<SnakeGameContainerListener> eventListenersList = new ArrayList<SnakeGameContainerListener>();
-    private Direction nextSnakeDirection = Direction.Right;
+    private final ArrayList<SnakeGameContainerListener> eventListenersList = new ArrayList<SnakeGameContainerListener>();
+    private Direction nextSnakeDirection = INITIAL_SNAKE_DIR;
     private Direction snakeDirection = nextSnakeDirection;
     private Point foodLocation;
     private Snake snake;
@@ -37,7 +39,7 @@ public class SnakeGameContainer extends JPanel
     private boolean gameStarted = false;
     private boolean gameOver = false;
     private boolean gameWon = false;
-    private boolean wallCollision = true;
+    private boolean killLoopThread = false;
     private int score = 0;
 
     /**
@@ -85,7 +87,7 @@ public class SnakeGameContainer extends JPanel
         return gameStarted;
     }
 
-    public void setPauseState(boolean pause)
+    public void setPauseState(final boolean pause)
     {
         gamePaused = pause;
     }
@@ -96,7 +98,7 @@ public class SnakeGameContainer extends JPanel
      *
      * @param dir The direction the snake should travel.
      */
-    public void setSnakeDirection(Direction dir)
+    public void setSnakeDirection(final Direction dir)
     {
         if (getOppositeDirection(dir).equals(snakeDirection) || gamePaused)
         {
@@ -113,7 +115,7 @@ public class SnakeGameContainer extends JPanel
      *
      * @param scoreListener The instance
      */
-    public void addEventListener(SnakeGameContainerListener scoreListener)
+    public void addEventListener(final SnakeGameContainerListener scoreListener)
     {
         eventListenersList.add(scoreListener);
     }
@@ -124,24 +126,15 @@ public class SnakeGameContainer extends JPanel
      */
     public void startGame()
     {
-        if (gameStarted)
-        {
-            throw new RuntimeException("The game is already going on!");
-        }
-
         if (gameOver)
         {
             setupSnakeAndFood();
         }
 
         resetScore();
+        resetVariables();
 
-        snakeDirection = Direction.Right;
-        nextSnakeDirection = Direction.Right;
-        gameOver = false;
-        gamePaused = false;
         gameStarted = true;
-        gameWon = false;
 
         // Start the game loop on a new thread via lambda expression
         new Thread(() ->
@@ -156,13 +149,41 @@ public class SnakeGameContainer extends JPanel
     }
 
     /**
+     * Starts a new game by resetting everything to its inital state.
+     */
+    public void startNewGame()
+    {
+        killLoopThread = true;
+
+        setupSnakeAndFood();
+        resetScore();
+        resetVariables();
+
+        this.repaint();
+    }
+
+    /**
+     * Resets some global scope variables to their default values.
+     */
+    private void resetVariables()
+    {
+        nextSnakeDirection = INITIAL_SNAKE_DIR;
+        snakeDirection = nextSnakeDirection;
+        gameOver = false;
+        gamePaused = false;
+        gameStarted = false;
+        gameWon = false;
+        killLoopThread = false;
+    }
+
+    /**
      * Sets up the snake game by creating the snake, generating a food at a random location, and starting
      * the main game loop.
      */
     private void setupSnakeAndFood()
     {
         // Create a new snake with a length of three
-        snake = new Snake(new Point(SNAKE_START_X, SNAKE_START_Y), wallCollision, SNAKE_DIMENSIONS, CONTAINER_HEIGHT, CONTAINER_WIDTH);
+        snake = new Snake(new Point(SNAKE_START_X, SNAKE_START_Y), WALL_COLLISION, SNAKE_DIMENSIONS, CONTAINER_HEIGHT, CONTAINER_WIDTH);
         snake.addBodyPart(Direction.Left);
         snake.addBodyPart(Direction.Left);
 
@@ -174,13 +195,13 @@ public class SnakeGameContainer extends JPanel
      */
     private void gameLoop()
     {
-        while (!gameOver && !gameWon)
+        while (!killLoopThread && !gameOver && !gameWon)
         {
             if (!gamePaused)
             {
                 try
                 {
-                    CollisionType collisionTypeAfterMoving = snake.move(snakeDirection);
+                    final CollisionType collisionTypeAfterMoving = snake.move(snakeDirection);
                     if (collisionTypeAfterMoving != CollisionType.None) // Either collided with a wall (if there are no walls) or one of its body parts
                     {
                         gameOver();
@@ -194,9 +215,9 @@ public class SnakeGameContainer extends JPanel
 
                     Thread.sleep(GAME_LOOP_SLEEP_MS);
                 }
-                catch (Exception ex)
+                catch (InterruptedException ex)
                 {
-                    // TODO: Handle exception...
+                    System.out.println("Exception thrown in game loop: " + ex.toString());
                 }
             }
 
@@ -205,7 +226,8 @@ public class SnakeGameContainer extends JPanel
     }
 
     /**
-     *
+     * Handles when the snake head collidies with the food on the map. When the snake head collidies with the food, the score is added
+     * some points and the snake grows by one unit.
      */
     private void handleFoodCollision()
     {
@@ -224,7 +246,7 @@ public class SnakeGameContainer extends JPanel
      */
     private void generateFood()
     {
-        ArrayList<Point> map = getEmptyMapPoints();
+        final ArrayList<Point> map = getEmptyMapPoints();
 
         if (map.size() == 0) // Snake has filled up the entire map
         {
@@ -232,7 +254,7 @@ public class SnakeGameContainer extends JPanel
         }
         else // Snake has not filled up the entire map
         {
-            int randIndex = (int)(Math.random() * map.size());
+            final int randIndex = (int)(Math.random() * map.size());
             foodLocation = map.get(randIndex);
         }
     }
@@ -244,7 +266,7 @@ public class SnakeGameContainer extends JPanel
      */
     private ArrayList<Point> getEmptyMapPoints()
     {
-        ArrayList<Point> result = new ArrayList<Point>();
+        final ArrayList<Point> result = new ArrayList<Point>();
 
         Point mapPoint;
         for (int row = 0; row < CONTAINER_HEIGHT / SNAKE_DIMENSIONS; row++) // Rows
@@ -269,7 +291,7 @@ public class SnakeGameContainer extends JPanel
      * @param dir The direction that you want the opposite of.
      * @return The direction that is opposite of the 'dir' parameter.
      */
-    private Direction getOppositeDirection(Direction dir)
+    private Direction getOppositeDirection(final Direction dir)
     {
         Direction oppDir;
 
@@ -319,7 +341,7 @@ public class SnakeGameContainer extends JPanel
         gameOver = true;
         gameStarted = false;
 
-        for (SnakeGameContainerListener listener : eventListenersList)
+        for (final SnakeGameContainerListener listener : eventListenersList)
         {
             listener.onGameOver();
         }
@@ -359,12 +381,12 @@ public class SnakeGameContainer extends JPanel
      * @param text The String to draw.
      * @param rect The Rectangle to center the text in.
      */
-    public void drawCenteredString(Graphics g, String text, Rectangle rect, Font font)
+    public void drawCenteredString(final Graphics g, final String text, final Rectangle rect, final Font font)
     {
-        FontMetrics metrics = g.getFontMetrics(font);
+        final FontMetrics metrics = g.getFontMetrics(font);
 
-        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        final int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        final int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 
         g.setFont(font);
         g.drawString(text, x, y);
@@ -377,11 +399,11 @@ public class SnakeGameContainer extends JPanel
      * @param g The Graphics object used to paint on the panel.
      */
     @Override
-    public void paintComponent(Graphics g)
+    public void paintComponent(final Graphics g)
     {
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D)g;
+        final Graphics2D g2d = (Graphics2D)g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Draw the food
@@ -389,10 +411,10 @@ public class SnakeGameContainer extends JPanel
         g2d.fillRect(foodLocation.x * SNAKE_DIMENSIONS, foodLocation.y * SNAKE_DIMENSIONS, SNAKE_DIMENSIONS, SNAKE_DIMENSIONS);
 
         // Draw the snake
-        g2d.setColor(snake.SNAKE_COLOUR);
+        g2d.setColor(Snake.SNAKE_COLOUR);
         for (int i = 0; i < snake.getBodyPartsList().size(); i++)
         {
-            Point bodyPartLoc = snake.getBodyPartsList().get(i);
+            final Point bodyPartLoc = snake.getBodyPartsList().get(i);
 
             g2d.fillRect(bodyPartLoc.x * SNAKE_DIMENSIONS, bodyPartLoc.y * SNAKE_DIMENSIONS, SNAKE_DIMENSIONS, SNAKE_DIMENSIONS);
         }

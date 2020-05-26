@@ -9,10 +9,10 @@ public class Snake
 {
     public final static Color SNAKE_COLOUR = new Color(50, 205, 50);
 
+    public final boolean WALL_COLLISION;
     private final int LEFT_BOUND, TOP_BOUND, BOTTOM_BOUND, RIGHT_BOUND;
 
     private ArrayList<Point> bodyPartsList;
-    private boolean wallCollision;
     private int snakeBodySize, mapHeight, mapWidth;
     private Point tailLastLocation;
 
@@ -31,7 +31,7 @@ public class Snake
         bodyPartsList = new ArrayList<Point>();
         bodyPartsList.add(startLoc);
 
-        this.wallCollision = wallCollision;
+        this.WALL_COLLISION = wallCollision;
         this.snakeBodySize = snakeBodySize;
         this.mapHeight = mapHeight;
         this.mapWidth = mapWidth;
@@ -87,8 +87,8 @@ public class Snake
     public CollisionType move(Direction dir)
     {
         tailLastLocation = bodyPartsList.get(bodyPartsList.size() - 1);
+        
         Point previousLocation = bodyPartsList.get(0);
-
         Point newHeadLoc = getDirectionOffset(previousLocation, dir);
 
         if (willCollideWithBody(newHeadLoc))
@@ -96,7 +96,7 @@ public class Snake
             return CollisionType.Body;
         }
 
-        if (wallCollision && willGoOutOfBounds(newHeadLoc))
+        if (WALL_COLLISION && willGoOutOfBounds(newHeadLoc))
         {
             return CollisionType.Wall;
         }
@@ -120,7 +120,7 @@ public class Snake
     /**
      * Determines whether the snake head will collide with one of its body parts (excluding its tail).
      *
-     * @param headLoc The location of the head
+     * @param headLoc The location of the snake head.
      * @return True if the snake head collided with one of its body parts, if not, false.
      */
     public boolean willCollideWithBody(Point headLoc)
@@ -155,7 +155,9 @@ public class Snake
     }
 
     /**
-     *
+     * Gets the offset point based off of a direction. For example, if the inital point is [x: 0, y: 0] and the direction was
+     * left then that offset point would be [x: -1, y: 0].
+     * 
      * @param initialPoint The point to get the offset of.
      * @param dir The direction to move the initalPoint to.
      * @return The point that the direction lead to.
@@ -190,13 +192,13 @@ public class Snake
     }
 
     /**
-     * Moves the snake head to the opposite wall if it goes past a wall.
+     * Moves the snake head to the opposite wall if it goes past a wall. This method will only work if wall collision is turned off.
      *
      * @param headLoc The location of the snake head.
      */
     private void handleWallTeleportation(Point headLoc)
     {
-        if (!wallCollision)
+        if (!WALL_COLLISION)
         {
             if (headLoc.y < TOP_BOUND)
             {
