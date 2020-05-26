@@ -30,7 +30,7 @@ public class SnakeGameContainer extends JPanel
     private final int CONTAINER_HEIGHT = SNAKE_DIMENSIONS * 50;
     private final int CONTAINER_WIDTH = SNAKE_DIMENSIONS * 75;
 
-    private final ArrayList<SnakeGameContainerListener> eventListenersList = new ArrayList<SnakeGameContainerListener>();
+    private ArrayList<SnakeGameContainerListener> eventListenersList = new ArrayList<SnakeGameContainerListener>();
     private Direction nextSnakeDirection = INITIAL_SNAKE_DIR;
     private Direction snakeDirection = nextSnakeDirection;
     private Point foodLocation;
@@ -87,7 +87,7 @@ public class SnakeGameContainer extends JPanel
         return gameStarted;
     }
 
-    public void setPauseState(final boolean pause)
+    public void setPauseState(boolean pause)
     {
         gamePaused = pause;
     }
@@ -98,7 +98,7 @@ public class SnakeGameContainer extends JPanel
      *
      * @param dir The direction the snake should travel.
      */
-    public void setSnakeDirection(final Direction dir)
+    public void setSnakeDirection(Direction dir)
     {
         if (getOppositeDirection(dir).equals(snakeDirection) || gamePaused)
         {
@@ -115,7 +115,7 @@ public class SnakeGameContainer extends JPanel
      *
      * @param scoreListener The instance
      */
-    public void addEventListener(final SnakeGameContainerListener scoreListener)
+    public void addEventListener(SnakeGameContainerListener scoreListener)
     {
         eventListenersList.add(scoreListener);
     }
@@ -201,7 +201,7 @@ public class SnakeGameContainer extends JPanel
             {
                 try
                 {
-                    final CollisionType collisionTypeAfterMoving = snake.move(snakeDirection);
+                    CollisionType collisionTypeAfterMoving = snake.move(snakeDirection);
                     if (collisionTypeAfterMoving != CollisionType.None) // Either collided with a wall (if there are no walls) or one of its body parts
                     {
                         gameOver();
@@ -246,7 +246,7 @@ public class SnakeGameContainer extends JPanel
      */
     private void generateFood()
     {
-        final ArrayList<Point> map = getEmptyMapPoints();
+        ArrayList<Point> map = getEmptyMapPoints();
 
         if (map.size() == 0) // Snake has filled up the entire map
         {
@@ -254,7 +254,7 @@ public class SnakeGameContainer extends JPanel
         }
         else // Snake has not filled up the entire map
         {
-            final int randIndex = (int)(Math.random() * map.size());
+            int randIndex = (int)(Math.random() * map.size());
             foodLocation = map.get(randIndex);
         }
     }
@@ -266,7 +266,7 @@ public class SnakeGameContainer extends JPanel
      */
     private ArrayList<Point> getEmptyMapPoints()
     {
-        final ArrayList<Point> result = new ArrayList<Point>();
+        ArrayList<Point> result = new ArrayList<Point>();
 
         Point mapPoint;
         for (int row = 0; row < CONTAINER_HEIGHT / SNAKE_DIMENSIONS; row++) // Rows
@@ -291,7 +291,7 @@ public class SnakeGameContainer extends JPanel
      * @param dir The direction that you want the opposite of.
      * @return The direction that is opposite of the 'dir' parameter.
      */
-    private Direction getOppositeDirection(final Direction dir)
+    private Direction getOppositeDirection(Direction dir)
     {
         Direction oppDir;
 
@@ -341,7 +341,7 @@ public class SnakeGameContainer extends JPanel
         gameOver = true;
         gameStarted = false;
 
-        for (final SnakeGameContainerListener listener : eventListenersList)
+        for (SnakeGameContainerListener listener : eventListenersList)
         {
             listener.onGameOver();
         }
@@ -381,12 +381,12 @@ public class SnakeGameContainer extends JPanel
      * @param text The String to draw.
      * @param rect The Rectangle to center the text in.
      */
-    public void drawCenteredString(final Graphics g, final String text, final Rectangle rect, final Font font)
+    public void drawCenteredString(Graphics g, String text, Rectangle rect, Font font)
     {
-        final FontMetrics metrics = g.getFontMetrics(font);
+        FontMetrics metrics = g.getFontMetrics(font);
 
-        final int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-        final int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 
         g.setFont(font);
         g.drawString(text, x, y);
@@ -399,11 +399,11 @@ public class SnakeGameContainer extends JPanel
      * @param g The Graphics object used to paint on the panel.
      */
     @Override
-    public void paintComponent(final Graphics g)
+    public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
 
-        final Graphics2D g2d = (Graphics2D)g;
+        Graphics2D g2d = (Graphics2D)g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Draw the food
@@ -414,7 +414,7 @@ public class SnakeGameContainer extends JPanel
         g2d.setColor(Snake.SNAKE_COLOUR);
         for (int i = 0; i < snake.getBodyPartsList().size(); i++)
         {
-            final Point bodyPartLoc = snake.getBodyPartsList().get(i);
+            Point bodyPartLoc = snake.getBodyPartsList().get(i);
 
             g2d.fillRect(bodyPartLoc.x * SNAKE_DIMENSIONS, bodyPartLoc.y * SNAKE_DIMENSIONS, SNAKE_DIMENSIONS, SNAKE_DIMENSIONS);
         }

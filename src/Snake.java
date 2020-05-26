@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public class Snake
 {
-    public final static Color SNAKE_COLOUR = new Color(50, 205, 50);
-
+    public static final Color SNAKE_COLOUR = new Color(50, 205, 50);
     public final boolean WALL_COLLISION;
     private final int LEFT_BOUND, TOP_BOUND, BOTTOM_BOUND, RIGHT_BOUND;
 
