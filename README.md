@@ -17,4 +17,6 @@ The controls for the game are:
 
 ## Screenshots
 
-Coming soon!
+![Game that hasn't been started](screenshots/screenshot1.png "Game that hasn't been started")
+![Game over](screenshots/screenshot2.png "Game over")
+![Game paused](screenshots/screenshot3.png "Game paused")
