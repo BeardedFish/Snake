@@ -1,6 +1,6 @@
 // File Name:     Direction.java
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
-// Date:          Saturday, May 17, 2020
+// Date:          Sunday, May 17, 2020
 
 public enum Direction
 {

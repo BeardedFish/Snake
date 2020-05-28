@@ -1,6 +1,6 @@
 // File Name:     Snake.java
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
-// Date:          Saturday, May 17, 2020
+// Date:          Sunday, May 17, 2020
 
 import java.awt.*;
 import java.util.ArrayList;
