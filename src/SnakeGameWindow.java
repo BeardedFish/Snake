@@ -2,12 +2,14 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Sunday, May 17, 2020
 
+import high_score_mngr.HighScoreManager;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -16,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
+import javax.xml.namespace.QName;
 
 public class SnakeGameWindow extends JFrame implements SnakeGameContainerListener
 {
@@ -28,15 +31,23 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
 
     private JMenuBar menuBar;
     private JMenu fileMenu, helpMenu;
-    private JMenuItem newGameMenuItem, closeMenuItem, aboutMenuItem;
+    private JMenuItem newGameMenuItem, highScoresMenuItem, closeMenuItem, aboutMenuItem;
 
     private SnakeGameContainer snakeGame;
+    private HighScoreManager highScoreMngr;
 
     /**
      * Inner class for handling clicks on the JMenu of this window.
      */
     private class MainMenuListener extends MenuAdapter implements ActionListener
     {
+        private JFrame parentFrame;
+
+        public MainMenuListener(JFrame parentFrame)
+        {
+            this.parentFrame = parentFrame;
+        }
+
         /**
          * Invoked every time a JMenuItem is clicked.
          *
@@ -53,6 +64,12 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
                 {
                     snakeGame.startNewGame();
                 }
+            }
+
+            if (e.getSource() == highScoresMenuItem)
+            {
+                HighScoresWindow hsWindow = new HighScoresWindow(parentFrame, highScoreMngr);
+                hsWindow.setVisible(true);
             }
 
             if (e.getSource() == closeMenuItem)
@@ -144,6 +161,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
         this.setResizable(false);
 
         initListeners();
+        initHighScoreManager();
         setupMenuBar();
         setupSnakeGameContainer();
         updateTitleWithScore();
@@ -160,7 +178,21 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     private void initListeners()
     {
         keyListener = new WindowKeyListener();
-        menuListener = new MainMenuListener();
+        menuListener = new MainMenuListener(this);
+    }
+ 
+    private void initHighScoreManager()
+    {
+        highScoreMngr = new HighScoreManager();
+
+        try
+        {
+            highScoreMngr.loadHighScores();
+        }
+        catch (IOException ex)
+        {
+
+        }
     }
 
     /**
@@ -172,8 +204,10 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
 
         fileMenu = new JMenu("File");
         newGameMenuItem = new JMenuItem("New Game");
+        highScoresMenuItem = new JMenuItem("High Scores");
         closeMenuItem = new JMenuItem("Close");
         fileMenu.add(newGameMenuItem);
+        fileMenu.add(highScoresMenuItem);
         fileMenu.add(new JSeparator());
         fileMenu.add(closeMenuItem);
 
@@ -188,6 +222,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
         helpMenu.addMenuListener(menuListener);
 
         newGameMenuItem.addActionListener(menuListener);
+        highScoresMenuItem.addActionListener(menuListener);
         closeMenuItem.addActionListener(menuListener);
         aboutMenuItem.addActionListener(menuListener);
 
@@ -230,6 +265,26 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     public void onGameOver()
     {
         this.setTitle(WINDOW_TITLE + " | Game Over! Final Score: " + snakeGame.getScore());
+
+        if (snakeGame.getScore() > 0)
+        {
+            int rank = highScoreMngr.getHighScoreRank(snakeGame.getScore());
+
+            if (rank != -1)
+            {
+                String name = JOptionPane.showInputDialog(null, "Enter your name:", "New High Score", JOptionPane.INFORMATION_MESSAGE);
+                highScoreMngr.updateHighScore(rank, name, snakeGame.getScore());
+            }
+        }
+
+        try
+        {
+            highScoreMngr.saveHighScores();
+        }
+        catch (IOException ex)
+        {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
