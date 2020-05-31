@@ -2,6 +2,8 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Thursday, May 21, 2020
 
+package game;
+
 public enum CollisionType
 {
     Body,

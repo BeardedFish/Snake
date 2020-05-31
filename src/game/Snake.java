@@ -2,6 +2,8 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Sunday, May 17, 2020
 
+package game;
+
 import java.awt.*;
 import java.util.ArrayList;
 

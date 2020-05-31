@@ -2,7 +2,12 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Sunday, May 17, 2020
 
-import high_score_mngr.HighScoreManager;
+package windows;
+
+import adapter.MenuAdapter;
+import game.Direction;
+import game.SnakeGameContainer;
+import game.SnakeGameContainerListener;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -18,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
-import javax.xml.namespace.QName;
+import score.HighScoreManager;
 
 public class SnakeGameWindow extends JFrame implements SnakeGameContainerListener
 {
@@ -79,7 +84,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
 
             if (e.getSource() == aboutMenuItem)
             {
-                JOptionPane.showMessageDialog(null, "Snake\nBy: Darian Benam\nVersion: 1.0", "About", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Snake\nBy: Darian Benam\nVersion: 1.1", "About", JOptionPane.INFORMATION_MESSAGE);
             }
         }
 
@@ -151,7 +156,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     }
 
     /**
-     * Sets up the window so that the snake game can be played.
+     * Sets up the window so that the snake game can be played. By calling this method, the window will be shown automatically.
      */
     private void setupWindow()
     {
@@ -181,6 +186,10 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
         menuListener = new MainMenuListener(this);
     }
  
+    /**
+     * Initalizes the high score manager by loading up the high scores saved on the hard drive into the program. If the high scores fail
+     * to load, then the high scores will just be initalized with default values (empty names and scores of zero).
+     */
     private void initHighScoreManager()
     {
         highScoreMngr = new HighScoreManager();
@@ -189,9 +198,9 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
         {
             highScoreMngr.loadHighScores();
         }
-        catch (IOException ex)
+        catch (Exception ex)
         {
-
+            JOptionPane.showMessageDialog(null, "An error occured while trying to load the high score file (" + highScoreMngr.HIGH_SCORE_FILE_PATH + ").\n\nError Message: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -247,6 +256,74 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     }
 
     /**
+     * Handles the occurence of if a new high score is achieved from the player. If a high score is not achieved, this method will not do
+     * anything.
+     */
+    private void handleNewHighScore()
+    {
+        if (snakeGame.getScore() > 0)
+        {
+            int rank = highScoreMngr.getHighScoreRank(snakeGame.getScore());
+
+            if (rank != -1)
+            {
+                String name;
+                boolean cancelled = false;
+                boolean invalidName = false;
+
+                while (true) // Loop forever until a valid name is entered
+                {
+                    name = JOptionPane.showInputDialog(null, "You achieved a high score! Enter your name to be displayed on the high score board:", "Congratulations", JOptionPane.INFORMATION_MESSAGE);
+
+                    if (name == null) // User pressed cancel
+                    {
+                        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel? Your high score will not be saved.", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    
+                        if (result == JOptionPane.YES_OPTION)
+                        {
+                            cancelled = true;
+
+                            break;
+                        }
+                    }
+                    else // User entered data in the text field
+                    {
+                        if (highScoreMngr.isValidName(name))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            invalidName = true;
+                        }
+                    }
+
+                    if (invalidName)
+                    {
+                        JOptionPane.showMessageDialog(null, "The name you entered is invalid. A valid name cannot contain \"" + highScoreMngr.getDataDelimiter() + "\" and also it must be between " + highScoreMngr.MIN_NAME_LENGTH + " and " + highScoreMngr.MAX_NAME_LENGTH + " characters in length.", "Error", JOptionPane.ERROR_MESSAGE);
+
+                        invalidName = false; // Reset this for the next iteration of the while loop
+                    }
+                } // End while
+
+                if (!cancelled)
+                {
+                    highScoreMngr.updateHighScore(rank, name, snakeGame.getScore());
+
+                    try
+                    {
+                        highScoreMngr.saveHighScores();
+                    }
+                    catch (IOException ex)
+                    {
+                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Updates the JFrame window title in a specific format with the current score the player achieved in the
      * snake game game.
      */
@@ -266,25 +343,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     {
         this.setTitle(WINDOW_TITLE + " | Game Over! Final Score: " + snakeGame.getScore());
 
-        if (snakeGame.getScore() > 0)
-        {
-            int rank = highScoreMngr.getHighScoreRank(snakeGame.getScore());
-
-            if (rank != -1)
-            {
-                String name = JOptionPane.showInputDialog(null, "Enter your name:", "New High Score", JOptionPane.INFORMATION_MESSAGE);
-                highScoreMngr.updateHighScore(rank, name, snakeGame.getScore());
-            }
-        }
-
-        try
-        {
-            highScoreMngr.saveHighScores();
-        }
-        catch (IOException ex)
-        {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        handleNewHighScore();
     }
 
     @Override
