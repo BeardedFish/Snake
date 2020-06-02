@@ -86,8 +86,8 @@ public class SnakeGameContainer extends JPanel
     }
 
     /**
-     * Changes the snake travel direction. This method wont change the snakes travel direction if or
-     * the game is paused.
+     * Changes the snake travel direction. This method wont change the snakes travel direction if the direction is the opposite 
+     * direction of where the snake is heading or if the game is paused.
      *
      * @param dir The direction the snake should travel.
      */
