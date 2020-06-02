@@ -49,8 +49,6 @@ public class SnakeGameContainer extends JPanel
         setupSnakeAndFood();
     }
 
-    // BEGIN GETTERS AND SETTERS //
-
     public int getScore()
     {
         return score;
@@ -102,8 +100,6 @@ public class SnakeGameContainer extends JPanel
 
         nextSnakeDirection = dir;
     }
-
-    //  END GETTERS AND SETTERS  //
 
     /**
      * Adds an event listener to the list of event listeners for this snake game container.
