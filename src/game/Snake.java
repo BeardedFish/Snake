@@ -2,7 +2,10 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Sunday, May 17, 2020
 
-import java.awt.*;
+package game;
+
+import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 
 public class Snake
@@ -43,7 +46,7 @@ public class Snake
 
     // BEGIN GETTERS //
 
-    public ArrayList<Point> getBodyPartsList()
+    public final ArrayList<Point> getBodyPartsList()
     {
         return bodyPartsList;
     }
@@ -144,8 +147,7 @@ public class Snake
     public boolean willGoOutOfBounds(Point headLoc)
     {
         if (headLoc.y < 0 || headLoc.x < 0
-                || headLoc.y >= mapHeight / snakeBodySize
-                || headLoc.x >= mapWidth / snakeBodySize)
+                || headLoc.y >= mapHeight / snakeBodySize || headLoc.x >= mapWidth / snakeBodySize)
         {
             return true;
         }
