@@ -46,13 +46,6 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
      */
     private class MainMenuListener extends MenuAdapter implements ActionListener
     {
-        private JFrame parentFrame;
-
-        public MainMenuListener(JFrame parentFrame)
-        {
-            this.parentFrame = parentFrame;
-        }
-
         /**
          * Invoked every time a JMenuItem is clicked.
          *
@@ -73,8 +66,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
 
             if (e.getSource() == highScoresMenuItem)
             {
-                HighScoresWindow hsWindow = new HighScoresWindow(parentFrame, highScoreMngr);
-                hsWindow.setVisible(true);
+                showHighScoreWindow();
             }
 
             if (e.getSource() == closeMenuItem)
@@ -183,7 +175,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     private void initListeners()
     {
         keyListener = new WindowKeyListener();
-        menuListener = new MainMenuListener(this);
+        menuListener = new MainMenuListener();
     }
  
     /**
@@ -313,14 +305,25 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
                     try
                     {
                         highScoreMngr.saveHighScores();
+
+                        showHighScoreWindow();
                     }
                     catch (IOException ex)
                     {
-                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "An error occured while trying to save the high score file (" + highScoreMngr.HIGH_SCORE_FILE_PATH + ").\n\nError Message: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Creates a new instance of the high score window and shows it.
+     */
+    private void showHighScoreWindow()
+    {
+        HighScoresWindow hsWindow = new HighScoresWindow(this, highScoreMngr);
+        hsWindow.setVisible(true);
     }
 
     /**

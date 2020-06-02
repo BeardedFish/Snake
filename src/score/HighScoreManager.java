@@ -138,7 +138,8 @@ public class HighScoreManager
      * Gets the rank position for a score. If a score beats a current high score, then that rank position is returned.
      * 
      * @param score The score to be compared to the current high scores.
-     * @return Either a number >= 1 if the score beat a high score, or -1 if the score did not beat any high scores on the leaderboard.
+     * @return Either a number >= 1 if the score beat a high score (where that number represents the rank position of the high score), or
+     *         -1 if the score did not beat any high scores on the leaderboard.
      */
     public int getHighScoreRank(int score)
     {

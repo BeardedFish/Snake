@@ -23,17 +23,14 @@ import score.HighScoreManager;
 
 public class HighScoresWindow extends JDialog
 {
-    public static final String WINDOW_TITLE = "High Scores";
-
-    private final int WINDOW_HEIGHT = 500, WINDOW_WIDTH = 500;
-    private final int HORIZONTAL_BORDER_PADDING = 100, VERTICAL_BORDER_PADDING = 15;
+    private static final String WINDOW_TITLE = "High Scores";
     private final String EMPTY_NAME_VALUE = "-";
 
     private HighScoreManager highScoreMngr;
     private ButtonListener btnListener;
 
     private JButton okBtn, clearHighScoresBtn;
-    private JLabel rankTitleLbl, nameTitleLbl, scoreTitleLbl;
+    private JLabel windowTitleLbl, rankTitleLbl, nameTitleLbl, scoreTitleLbl;
     private HighScoreRow[] highScoreRows;
     private JPanel highScoresPnl, buttonsPnl;
     
@@ -123,14 +120,25 @@ public class HighScoresWindow extends JDialog
     public void setupWindow()
     {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setResizable(false);
 
+        setupWindowTitle();
         setupHighScorePnl(); 
         setupButtonsPnl();
 
         this.pack();
         this.setLocationRelativeTo(null);
+    }
+
+    private void setupWindowTitle()
+    {
+        final Font titleFont = new Font(this.getFont().getFontName(), Font.BOLD, 24);
+
+        windowTitleLbl = new JLabel("Top " + highScoreMngr.HIGH_SCORES_COUNT + " High Scores");
+        windowTitleLbl.setFont(titleFont);
+        windowTitleLbl.setBorder(new EmptyBorder(15, 15, 0, 15));
+
+        this.add(windowTitleLbl, BorderLayout.NORTH);
     }
 
     /**
@@ -140,7 +148,7 @@ public class HighScoresWindow extends JDialog
     {
         highScoresPnl = new JPanel();
         highScoresPnl.setLayout(new GridLayout(highScoreMngr.HIGH_SCORES_COUNT + 2, 4, 100, 10));
-        highScoresPnl.setBorder(new EmptyBorder(VERTICAL_BORDER_PADDING, HORIZONTAL_BORDER_PADDING, 0, HORIZONTAL_BORDER_PADDING));
+        highScoresPnl.setBorder(new EmptyBorder(15, 100, -15, 100));
 
         rankTitleLbl = new JLabel("Rank");
         nameTitleLbl = new JLabel("Name");
@@ -160,7 +168,7 @@ public class HighScoresWindow extends JDialog
     }
 
     /**
-     * 
+     * Sets up the button panel which serves as a container for buttons that do certain tasks (ex: Ok button closes the window).
      */
     private void setupButtonsPnl()
     {
@@ -168,7 +176,7 @@ public class HighScoresWindow extends JDialog
 
         buttonsPnl = new JPanel();
         buttonsPnl.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        buttonsPnl.setBorder(new EmptyBorder(0, HORIZONTAL_BORDER_PADDING, VERTICAL_BORDER_PADDING, HORIZONTAL_BORDER_PADDING));
+        buttonsPnl.setBorder(new EmptyBorder(0, 15, 15, 15));
 
         okBtn = new JButton("Ok");
         clearHighScoresBtn = new JButton("Clear High Scores");
@@ -198,7 +206,7 @@ public class HighScoresWindow extends JDialog
         {
             final String PLAYER_NAME = highScores[i].name.isEmpty() ? EMPTY_NAME_VALUE : highScores[i].name;
 
-            if (highScoreRows[i] == null)
+            if (highScoreRows[i] == null) // Initalize the high score rows
             {
                 highScoreRows[i] = new HighScoreRow(this.getFont(),
                                                     i + 1,
@@ -209,7 +217,7 @@ public class HighScoresWindow extends JDialog
                 highScoresPnl.add(highScoreRows[i].nameLbl);
                 highScoresPnl.add(highScoreRows[i].scoreLbl);
             }
-            else
+            else // High score rows are already initalized
             {
                 highScoreRows[i].nameLbl.setText(PLAYER_NAME);
                 highScoreRows[i].scoreLbl.setText(Integer.toString(highScores[i].score));

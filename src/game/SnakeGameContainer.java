@@ -27,21 +27,14 @@ public class SnakeGameContainer extends JPanel
     private final int FOOD_POINTS_WORTH = 15;
     private final int GAME_LOOP_SLEEP_MS = 75;
     private final int SNAKE_DIMENSIONS = 10;
-    private final int SNAKE_START_X = 3;
-    private final int SNAKE_START_Y = 1;
-    private final int CONTAINER_HEIGHT = SNAKE_DIMENSIONS * 50;
-    private final int CONTAINER_WIDTH = SNAKE_DIMENSIONS * 75;
+    private final int SNAKE_START_X = 3, SNAKE_START_Y = 1;
+    private final int CONTAINER_HEIGHT = SNAKE_DIMENSIONS * 50, CONTAINER_WIDTH = SNAKE_DIMENSIONS * 75;
 
     private ArrayList<SnakeGameContainerListener> eventListenersList = new ArrayList<SnakeGameContainerListener>();
-    private Direction nextSnakeDirection = INITIAL_SNAKE_DIR;
-    private Direction snakeDirection = nextSnakeDirection;
+    private Direction nextSnakeDirection = INITIAL_SNAKE_DIR, snakeDirection = nextSnakeDirection;
     private Point foodLocation;
     private Snake snake;
-    private boolean gamePaused = false;
-    private boolean gameStarted = false;
-    private boolean gameOver = false;
-    private boolean gameWon = false;
-    private boolean killLoopThread = false;
+    private boolean gamePaused = false, gameStarted = false, gameOver = false, gameWon = false, killLoopThread = false;
     private int score = 0;
 
     /**
@@ -115,7 +108,7 @@ public class SnakeGameContainer extends JPanel
     /**
      * Adds an event listener to the list of event listeners for this snake game container.
      *
-     * @param scoreListener The instance
+     * @param scoreListener The listener instance to be added to the list.
      */
     public void addEventListener(SnakeGameContainerListener scoreListener)
     {
@@ -429,7 +422,7 @@ public class SnakeGameContainer extends JPanel
         }
         else if (gameOver && !gameStarted)
         {
-            drawCenteredString(g2d, "Game Over! Press the Spacebar to start a new game!", this.getBounds(), TEXT_FONT);
+            drawCenteredString(g2d, "Game over! Press the Spacebar to start a new game!", this.getBounds(), TEXT_FONT);
         }
         else if (!gameStarted)
         {
