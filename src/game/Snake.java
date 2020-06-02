@@ -44,8 +44,6 @@ public class Snake
         this.RIGHT_BOUND = mapWidth / snakeBodySize;
     }
 
-    // BEGIN GETTERS //
-
     public final ArrayList<Point> getBodyPartsList()
     {
         return bodyPartsList;
@@ -55,8 +53,6 @@ public class Snake
     {
         return tailLastLocation;
     }
-
-    //  END GETTERS  //
 
     /**
      * Adds a body part to the snake at a specific location.
