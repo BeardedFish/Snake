@@ -171,7 +171,7 @@ public class HighScoreManager
     }
 
     /**
-     * Updates the high score list
+     * Updates the high score list by adding/replacing a name at a specified rank.
      * 
      * @param rank The rank that this user will take.
      * @param name The name of the user who got the high score.
