@@ -142,13 +142,7 @@ public class Snake
      */
     public boolean willGoOutOfBounds(Point headLoc)
     {
-        if (headLoc.y < 0 || headLoc.x < 0
-                || headLoc.y >= mapHeight / snakeBodySize || headLoc.x >= mapWidth / snakeBodySize)
-        {
-            return true;
-        }
-
-        return false;
+        return headLoc.y < 0 || headLoc.x < 0  || headLoc.y >= mapHeight / snakeBodySize || headLoc.x >= mapWidth / snakeBodySize;
     }
 
     /**
