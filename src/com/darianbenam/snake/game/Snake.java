@@ -146,11 +146,11 @@ public class Snake
     }
 
     /**
-     * Gets the offset point based off of a direction. For example, if the inital point is [x: 0, y: 0] and the direction was
+     * Gets the offset point based off of a direction. For example, if the initial point is [x: 0, y: 0] and the direction was
      * left then that offset point would be [x: -1, y: 0].
      * 
      * @param initialPoint The point to get the offset of.
-     * @param dir The direction to move the initalPoint to.
+     * @param dir The direction to move the initialPoint to.
      * @return The point that the direction lead to.
      */
     private Point getDirectionOffset(Point initialPoint, Direction dir)

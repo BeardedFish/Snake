@@ -206,7 +206,7 @@ public class HighScoresWindow extends JDialog
         {
             final String PLAYER_NAME = highScores[i].name.isEmpty() ? EMPTY_NAME_VALUE : highScores[i].name;
 
-            if (highScoreRows[i] == null) // Initalize the high score rows
+            if (highScoreRows[i] == null) // Initialize the high score rows
             {
                 highScoreRows[i] = new HighScoreRow(this.getFont(),
                                                     i + 1,
@@ -217,7 +217,7 @@ public class HighScoresWindow extends JDialog
                 highScoresPnl.add(highScoreRows[i].nameLbl);
                 highScoresPnl.add(highScoreRows[i].scoreLbl);
             }
-            else // High score rows are already initalized
+            else // High score rows are already initialized
             {
                 highScoreRows[i].nameLbl.setText(PLAYER_NAME);
                 highScoreRows[i].scoreLbl.setText(Integer.toString(highScores[i].score));

@@ -32,7 +32,7 @@ public class HighScoreManager
     }
  
     /**
-     * Clears the high score leaderboard by creating a new one initalizing each indexes value to have a blank name with a score of zero.
+     * Clears the high score leaderboard by creating a new one initializing each indexes value to have a blank name with a score of zero.
      */
     public void clearHighScoresLeaderboard()
     {

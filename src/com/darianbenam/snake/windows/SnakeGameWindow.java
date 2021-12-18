@@ -179,8 +179,8 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     }
  
     /**
-     * Initalizes the high score manager by loading up the high scores saved on the hard drive into the program. If the high scores fail
-     * to load, then the high scores will just be initalized with default values (empty names and scores of zero).
+     * Initializes the high score manager by loading up the high scores saved on the hard drive into the program. If the high scores fail
+     * to load, then the high scores will just be initialized with default values (empty names and scores of zero).
      */
     private void initHighScoreManager()
     {
