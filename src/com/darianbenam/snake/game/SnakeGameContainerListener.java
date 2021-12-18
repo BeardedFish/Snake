@@ -2,7 +2,7 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Monday, May 18, 2020
 
-package game;
+package com.darianbenam.snake.game;
 
 public interface SnakeGameContainerListener
 {

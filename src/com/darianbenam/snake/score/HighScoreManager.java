@@ -2,7 +2,7 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Friday, May 29, 2020
 
-package score;
+package com.darianbenam.snake.score;
 
 import java.io.File;
 import java.io.FileWriter;

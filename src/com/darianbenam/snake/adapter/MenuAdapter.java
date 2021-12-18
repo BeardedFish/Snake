@@ -2,7 +2,7 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Saturday, May 23, 2020
 
-package adapter;
+package com.darianbenam.snake.adapter;
 
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;

@@ -2,7 +2,9 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Monday, May 18, 2020
 
-import windows.SnakeGameWindow;
+package com.darianbenam.snake;
+
+import com.darianbenam.snake.windows.SnakeGameWindow;
 
 public class Main
 {

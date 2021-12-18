@@ -2,12 +2,12 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Sunday, May 17, 2020
 
-package windows;
+package com.darianbenam.snake.windows;
 
-import adapter.MenuAdapter;
-import game.Direction;
-import game.SnakeGameContainer;
-import game.SnakeGameContainerListener;
+import com.darianbenam.snake.adapter.MenuAdapter;
+import com.darianbenam.snake.game.Direction;
+import com.darianbenam.snake.game.SnakeGameContainer;
+import com.darianbenam.snake.game.SnakeGameContainerListener;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
-import score.HighScoreManager;
+import com.darianbenam.snake.score.HighScoreManager;
 
 public class SnakeGameWindow extends JFrame implements SnakeGameContainerListener
 {

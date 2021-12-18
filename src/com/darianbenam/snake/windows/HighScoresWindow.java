@@ -2,7 +2,7 @@
 // By:            Darian Benam (GitHub: https://github.com/BeardedFish/)
 // Date:          Thursday, May 28, 2020
 
-package windows;
+package com.darianbenam.snake.windows;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -18,8 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import score.HighScore;
-import score.HighScoreManager;
+import com.darianbenam.snake.score.HighScore;
+import com.darianbenam.snake.score.HighScoreManager;
 
 public class HighScoresWindow extends JDialog
 {
