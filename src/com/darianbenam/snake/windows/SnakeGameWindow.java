@@ -248,7 +248,7 @@ public class SnakeGameWindow extends JFrame implements SnakeGameContainerListene
     }
 
     /**
-     * Handles the occurence of if a new high score is achieved from the player. If a high score is not achieved, this method will not do
+     * Handles the occurrence of if a new high score is achieved from the player. If a high score is not achieved, this method will not do
      * anything.
      */
     private void handleNewHighScore()
